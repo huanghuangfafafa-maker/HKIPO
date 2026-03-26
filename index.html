@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>港股IPO日历 · 雪球商业化 · 2026-03</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#F2F6FB;color:#0D1A28;min-height:100vh;padding:16px}
+.wrap{max-width:860px;margin:0 auto}
+.hd{background:#1256C8;border-radius:12px;padding:18px 20px;margin-bottom:14px;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.hd h1{font-size:18px;font-weight:700}
+.hd p{font-size:11px;opacity:.7;margin-top:3px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pl{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.18);white-space:nowrap}
+.leg{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;padding:2px}
+.lg{display:flex;align-items:center;gap:4px;font-size:11.5px;color:#5A7090}
+.ld{width:10px;height:10px;border-radius:3px}
+.week-row{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px}
+.wl{text-align:center;font-size:11px;font-weight:600;color:#8098B8;padding:5px 0}
+.wl.wk{color:#C82020}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.day{background:#fff;border:1px solid #E4EDF8;border-radius:8px;padding:7px 6px;min-height:96px;cursor:pointer;transition:all .12s}
+.day:hover{border-color:#1256C8;background:#F0F6FF}
+.day.empty{background:transparent;border-color:transparent;cursor:default;pointer-events:none}
+.day.today{border:2px solid #1256C8;background:#F0F6FF}
+.day.wkend{background:#FAFBFC}
+.day.past{opacity:.55}
+.day.no-ev{cursor:default}
+.day.no-ev:hover{border-color:#E4EDF8;background:#fff}
+.day.no-ev.wkend:hover{background:#FAFBFC}
+.dn{font-size:11px;font-weight:600;color:#8098B8;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.dn-t{font-size:9px;font-weight:700;background:#1256C8;color:#fff;padding:1px 5px;border-radius:3px}
+.chip{border-radius:3px;padding:3px 5px;margin-bottom:3px;font-size:10px;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.cl{background:#E4F7EE;color:#0A6830}
+.cc{background:#FEF3E2;color:#8A5200}
+.co{background:#E6F1FD;color:#1256C8}
+.ch{background:#F0ECFC;color:#4828A0}
+.cf{background:#F0F5FA;color:#5A7090}
+.cx{background:#FEEEEE;color:#900000}
+.ci{background:#F5F0F8;color:#6040A0}
+.more{font-size:9.5px;color:#8098B8;margin-top:2px}
+/* Modal */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;padding:18px 20px 36px}
+.bar{width:36px;height:4px;background:#D8E4F2;border-radius:2px;margin:0 auto 14px}
+.sd{font-size:12px;color:#8098B8;margin-bottom:14px}
+.ec{border:1px solid #E4EDF8;border-radius:10px;padding:14px;margin-bottom:10px}
+.eh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.en{font-size:16px;font-weight:700;color:#0D1A28}
+.et-wrap{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.et{font-size:10px;padding:2px 7px;border-radius:20px;border:1px solid}
+.et-b{background:#E6F1FD;color:#1256C8;border-color:#B5D4F8}
+.et-gray{background:#F0F5FA;color:#5A7090;border-color:#C8D8E8}
+.eb{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-left:8px}
+.eb-l{background:#E4F7EE;color:#0A6830}
+.eb-c{background:#FEF3E2;color:#8A5200}
+.eb-o{background:#E6F1FD;color:#1256C8}
+.eb-h{background:#F0ECFC;color:#4828A0}
+.eb-f{background:#F0F5FA;color:#5A7090}
+.eb-x{background:#FEEEEE;color:#900000}
+.eb-i{background:#F5F0F8;color:#6040A0}
+.kg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:4px}
+.ki{background:#F4F8FD;border-radius:7px;padding:8px 10px}
+.kl{font-size:10.5px;color:#8098B8;margin-bottom:2px}
+.kv{font-size:12.5px;color:#0D1A28;font-weight:500}
+.kv.em{color:#1256C8}
+.kv.g{color:#0A6830}
+.kv.r{color:#C01818}
+.ed{font-size:12px;color:#5A7090;line-height:1.7;margin-top:10px;padding-top:10px;border-top:1px solid #EEF4FC}
+.cb{width:100%;padding:12px;margin-top:14px;border:1px solid #D8E4F2;border-radius:10px;background:none;font-size:14px;color:#8098B8;cursor:pointer}
+.hidden{display:none}
+.ft{max-width:860px;margin:16px auto 0;font-size:10.5px;color:#8098B8;line-height:1.9;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hd">
+  <div><h1>港股 IPO 日历 · 2026年3月</h1><p>雪球商业化内部版 · 点击日期查看公司详情 · 数据来源：Wind · 港交所披露易 · 财联社</p></div>
+  <div class="pills">
+    <span class="pl">今日截止 5家</span>
+    <span class="pl">3/26招股 2家</span>
+    <span class="pl">3/30上市 5家</span>
+    <span class="pl">递表 12家</span>
+  </div>
+</div>
+<div class="leg">
+  <div class="lg"><div class="ld" style="background:#0A9658"></div>挂牌上市</div>
+  <div class="lg"><div class="ld" style="background:#8A5200"></div>申购截止</div>
+  <div class="lg"><div class="ld" style="background:#1256C8"></div>招股开始</div>
+  <div class="lg"><div class="ld" style="background:#4828A0"></div>聆讯通过</div>
+  <div class="lg"><div class="ld" style="background:#888"></div>递表/意向</div>
+  <div class="lg"><div class="ld" style="background:#900000"></div>失效</div>
+</div>
+<div class="week-row">
+  <div class="wl wk">日</div><div class="wl">一</div><div class="wl">二</div><div class="wl">三</div><div class="wl">四</div><div class="wl">五</div><div class="wl wk">六</div>
+</div>
+<div class="cal" id="cal"></div>
+</div>
+
+<div class="ov hidden" id="modal">
+  <div class="sheet">
+    <div class="bar"></div>
+    <div class="sd" id="sd"></div>
+    <div id="sb"></div>
+    <button class="cb" onclick="cm()">关 闭</button>
+  </div>
+</div>
+
+<div class="ft">数据来源：Wind · 港交所披露易 · 财联社 · 新浪财经IPO周报 · 格隆汇 | 更新：2026-03-25 | 仅供内部参考，不构成投资建议</div>
+
+<script>
+const E={
+6:[{t:'hear',n:'胜宏科技',c:'300476.SZ',tg:['A+H','AI/算力PCB'],k:[['备案','证监会2026-03-06已获批✓'],['办公地','广东省惠州市'],['保荐人','摩根大通+中信建投+广发'],['前三季扣非利润','32.48亿'],['递表日','2026-02-24（二次）']],d:'全球AI及高性能计算PCB龙头，2025H1全球第一；二次递表，证监会备案已获批，是递表公司中进程最快的'}],
+8:[{t:'hear',n:'和辉光电',c:'688538.SH',tg:['A+H','OLED面板'],k:[['聆讯日','2026-03-08'],['办公地','上海市'],['保荐人','中金公司（独家）'],['A股市值','约343亿元（科创板）']],d:'国内OLED显示面板核心厂商，科创板上市，拟A+H双地挂牌；聆讯已过，等待启动招股'}],
+9:[{t:'filed',n:'思格新能源',c:'纯H股',tg:['分布式储能','三次递表'],k:[['递表日','2026-03-09（三次）'],['办公地','上海市'],['保荐人','中信证券+法国巴黎银行'],['前三季收入','56.41亿（同比+7倍）'],['前三季净利润','18.90亿'],['创始人背景','前华为智能光伏业务总裁']],d:'全球第一可堆叠分布式光储一体机（市占28.6%），成立不到3年；华为前高管创立，高瓴创投/华登国际股东'}],
+10:[{t:'listed',n:'美格智能',c:'3268.HK',tg:['A+H','算力PCB'],k:[['挂牌日','2026-03-10'],['行业','AI服务器关键部件PCB'],['办公地','广东省深圳市'],['保荐人','中金+海通国际']],d:'AI服务器关键部件PCB制造商，A股代码001389.SZ'}],
+11:[
+  {t:'filed',n:'麦科田',c:'纯H股',tg:['医疗器械','二次递表'],k:[['递表日','2026-03-11（二次）'],['办公地','广东省深圳市'],['保荐人','摩根士丹利+华泰国际'],['知名股东','深创投/高瓴/礼来亚洲'],['2025年收入','16.19亿，已扭亏为盈']],d:'全球医疗器械提供商，产品覆盖140+国家；顶级机构股东背书'},
+  {t:'intent',n:'新乳业',c:'002946.SZ',tg:['A股意向','乳制品'],k:[['公告日','2026-03-11'],['办公地','四川省成都市'],['发行规模','≤总股本15% H股'],['前三季净利润','6.23亿（+31.5%）'],['A股反应','宣布当日跌停-9.2%'],['集团背景','新希望集团·刘畅掌舵']],d:'国内首家启动A+H的乳企，冲刺港股低温奶第一股；引力传媒同日也公告H股意向'}
+],
+12:[
+  {t:'hear',n:'瀚天天成',c:'2726.HK',tg:['纯H股','SiC外延'],k:[['聆讯日','2026-03-12'],['办公地','福建省厦门市'],['保荐人','华泰金控（香港）即中金，独家'],['2024年净利润','1.65亿，毛利率34.1%'],['行业地位','全球SiC外延第一，市占>30%']],d:'全名：瀚天天成电子科技（厦门）股份有限公司；碳化硅外延晶片用于电动车、充电桩、储能等'},
+  {t:'open',n:'广合科技',c:'1989.HK',tg:['A+H','算力PCB'],k:[['招股开始','2026-03-12'],['办公地','广东省深圳市'],['保荐人','中信证券+汇丰'],['募资','≤33.06亿港元']],d:'全球算力服务器PCB第三、内地第一'}
+],
+13:[
+  {t:'open',n:'国民技术',c:'2701.HK',tg:['A+H','MCU芯片'],k:[['招股开始','2026-03-13'],['办公地','广东省深圳市'],['保荐人','中信证券（独家）'],['发行价','≤10.80港元'],['募资','10.26亿港元']],d:'A股MCU平台型IC设计公司赴港，A股代码300077.SZ'},
+  {t:'open',n:'飞速创新',c:'3355.HK',tg:['纯H股','DTC网络'],k:[['招股开始','2026-03-13'],['办公地','广东省深圳市'],['保荐人','中金+中信建投+招商国际'],['募资','15.36亿港元'],['孖展认购','62倍，基石45.83%']],d:'全球第二大在线DTC网络解决方案提供商；暗盘+44%'}
+],
+15:[
+  {t:'hear',n:'傅里叶半导体',c:'3625.HK',tg:['纯H股','音频芯片'],k:[['聆讯日','2026-03-15'],['办公地','上海市'],['保荐人','国泰海通+东方证券'],['2024年收入','3.55亿（+136%）'],['证监会备案','已获批✓']],d:'功放音频芯片及触觉反馈芯片国内领先；以保密形式递表，聆讯通过后启动招股'},
+  {t:'filed',n:'芯碁微装',c:'688630.SH',tg:['A+H','PCB设备'],k:[['递表日','2026-03-15（二次）'],['办公地','安徽省合肥市'],['保荐人','中金公司（独家）'],['A股市值','约236亿元（科创板）'],['2025年净利润','2.90亿（+80%）']],d:'全球最大PCB直接成像设备供应商'}
+],
+16:[
+  {t:'filed',n:'璞泰来',c:'603659.SH',tg:['A+H','电池材料'],k:[['递表日','2026-03-16（首次）'],['办公地','上海市'],['保荐人','中金公司（独家）'],['A股市值','约689亿元'],['2025年净利润','26.14亿，毛利率29.7%'],['2025年收入','156.56亿元']],d:'新能源电池产业链上游综合解决方案龙头，业绩稳健增长'},
+  {t:'filed',n:'海清智元',c:'纯H股',tg:['多光谱AI','二次递表'],k:[['递表日','2026-03-16（二次）'],['办公地','北京市'],['保荐人','民银资本+浦银国际'],['2025年净利润','0.29亿（扭亏为盈）'],['2025年收入','6.69亿（+28%）']],d:'中国领先多光谱AI技术企业，2025年实现扭亏为盈'},
+  {t:'open',n:'泽景股份/凯乐士',c:'2632/2729.HK',tg:['纯H股'],k:[['招股开始','2026-03-16'],['泽景发行价','42–48港元，募资约7.30亿'],['凯乐士发行价','16.40–20.40港元，募资约6.77亿'],['泽景办公地','浙江省杭州市'],['凯乐士办公地','广东省深圳市']],d:'两家同日开始招股，均3月24日挂牌'}
+],
+17:[{t:'close',n:'广合科技',c:'1989.HK',tg:['A+H','算力PCB'],k:[['招股截止','2026-03-17'],['挂牌日','2026-03-20'],['办公地','广东省深圳市'],['募资','≤33.06亿港元'],['首日涨幅','+33.56%🚀']],d:'招股截止后3月20日上市，首日大涨33.56%，全天成交额27.76亿港元'}],
+18:[
+  {t:'close',n:'国民技术/飞速创新',c:'2701/3355.HK',tg:['招股截止'],k:[['招股截止','2026-03-18'],['挂牌日','2026-03-23'],['飞速创新孖展','62倍，暗盘+44%'],['国民技术暗盘','+约9%']],d:'两家均3月23日挂牌，飞速创新认购热情极高'},
+  {t:'filed',n:'斑马智能',c:'纯H股',tg:['智能座舱','首次递表'],k:[['递表日','2026-03-18（首次）'],['办公地','浙江省杭州市'],['保荐人','德意志银行+中金+国泰海通'],['2025年收入','8.61亿，毛利率41.9%']],d:'全球智能座舱解决方案领先企业，德银+中金+国泰海通三大顶级投行联合保荐'}
+],
+19:[{t:'close',n:'泽景/凯乐士',c:'2632/2729.HK',tg:['招股截止'],k:[['招股截止','2026-03-19'],['挂牌日','2026-03-24'],['泽景发行价','42–48港元'],['凯乐士发行价','16.40–20.40港元']],d:'两家均3月24日挂牌'}],
+20:[
+  {t:'listed',n:'广合科技',c:'1989.HK',tg:['A+H','算力PCB'],k:[['挂牌日','2026-03-20'],['首日涨幅','+33.56%🚀'],['募资','≤33.06亿港元'],['成交额','27.76亿港元'],['办公地','广东省深圳市'],['保荐人','中信证券+汇丰']],d:'全球算力服务器PCB第三、内地第一；首日大涨，每手中签赚约2412港元，首日纳入港股通'},
+  {t:'open',n:'5家同日招股',c:'1021/2526/2667/2726/6636',tg:['5家同日'],k:[['华沿机器人','1021.HK · 17.00港元 · 200股/手 · 3,434港元'],['德适生物-B','2526.HK · 95.6–112.5港元 · 50股/手 · 5,682港元'],['同仁堂医养','2667.HK · 7.3–8.3港元 · 500股/手'],['瀚天天成','2726.HK · 76.26港元 · 50股/手 · 3,833港元'],['极视角','6636.HK · 40.00港元 · 50股/手 · 2,020港元']],d:'5家3月20日同日招股，均3月25日截止，3月30日预计挂牌'}
+],
+22:[{t:'lapsed',n:'格林美/天赐材料',c:'002340/002709.SZ',tg:['招股书失效'],k:[['失效日','2026-03-22'],['原因','递表满6个月自动失效'],['格林美行业','新能源材料/电池回收，广东深圳'],['天赐材料行业','锂电池材料，广东广州'],['原保荐人','摩根大通+中信系（各自）'],['状态','待重新递表']],d:'两家均于2025-09-22递表，满6个月未完成上市自动失效，需重新向港交所递表'}],
+23:[
+  {t:'listed',n:'飞速创新',c:'3355.HK',tg:['纯H股','DTC网络'],k:[['挂牌日','2026-03-23'],['募资','15.36亿港元'],['孖展认购','62倍'],['基石占比','45.83%（11家机构）'],['办公地','广东省深圳市'],['前三季净利润','4.23亿，毛利率52.6%']],d:'全球第二大在线DTC网络解决方案提供商；暗盘+44%，三大顶级投行联合保荐'},
+  {t:'listed',n:'国民技术',c:'2701.HK',tg:['A+H','MCU芯片'],k:[['挂牌日','2026-03-23'],['发行价','10.80港元'],['募资','10.26亿港元'],['办公地','广东省深圳市'],['保荐人','中信证券（独家）'],['基石','国华人寿等5家机构']],d:'A股MCU龙头赴港，A股代码300077.SZ；首日纳入港股通，暗盘涨约9%'}
+],
+24:[
+  {t:'listed',n:'泽景股份',c:'2632.HK',tg:['纯H股','汽车HUD'],k:[['挂牌日','2026-03-24'],['发行价','42–48港元'],['募资','约7.30亿港元'],['办公地','浙江省杭州市']],d:'汽车HUD解决方案提供商'},
+  {t:'listed',n:'凯乐士科技',c:'2729.HK',tg:['纯H股','物流机器人'],k:[['挂牌日','2026-03-24'],['发行价','16.40–20.40港元'],['募资','约6.77亿港元'],['办公地','广东省深圳市'],['保荐人','国泰君安+华泰国际']],d:'综合智能场内物流机器人提供商'}
+],
+25:[
+  {t:'close',n:'华沿机器人',c:'1021.HK',tg:['纯H股','协作机器人'],k:[['申购截止','今日 2026-03-25'],['发行价','17.00港元'],['每手/入场费','200股 / 约3,434港元'],['募资','约13.73亿港元'],['市值','90.35亿港元'],['办公地','广东省深圳市'],['保荐人','中国国际金融香港+海通国际'],['基石','高瓴等10家机构'],['前三季收入','2.81亿（+36.2%）']],d:'原大族机器人，国产高端协作机器人领军；产品覆盖工业、医疗、消费电子；欧洲+美洲收入占37.9%'},
+  {t:'close',n:'瀚天天成',c:'2726.HK',tg:['纯H股','SiC外延'],k:[['申购截止','今日 2026-03-25'],['发行价','76.26港元'],['每手/入场费','50股 / 约3,833港元'],['募资','约16.39亿港元'],['市值','324.55亿港元'],['办公地','福建省厦门市'],['保荐人','华泰金控（香港）独家'],['行业地位','全球SiC外延第一，市占>30%']],d:'全球碳化硅外延行业领导者；2024年净利润1.65亿，毛利率34.1%'},
+  {t:'close',n:'德适生物-B',c:'2526.HK',tg:['18A','医学影像AI'],k:[['申购截止','今日 2026-03-25'],['发行价区间','95.60–112.50港元'],['每手/入场费','50股 / 约5,682港元'],['募资（中间价）','约8.32亿港元'],['办公地','浙江省杭州市'],['保荐人','华泰金控（香港）独家'],['前三季收入增速','同比+约4倍']],d:'18A医疗科技；核心产品AI AutoVision® 染色体核型AI分析系统；成立于2016年'},
+  {t:'close',n:'极视角',c:'6636.HK',tg:['18C','AI视觉'],k:[['申购截止','今日 2026-03-25'],['发行价','40.00港元'],['每手/入场费','50股 / 约2,020港元'],['募资','约4.99亿港元'],['办公地','山东省青岛市'],['保荐人','国信证券（香港）独家'],['基石','GKI+政金国际'],['2024年财务','收入2.57亿，毛利率40.2%，已盈利']],d:'AI计算机视觉端到端方案商；高通、华润、招商局资本等股东；2024年扭亏为盈'},
+  {t:'close',n:'同仁堂医养',c:'2667.HK',tg:['纯H股','中医医疗'],k:[['申购截止','今日 2026-03-25'],['发行价区间','7.30–8.30港元'],['每手','500股'],['募资（中间价）','约7.85亿港元'],['办公地','北京市'],['保荐人','农银国际证券'],['绿鞋','15%超额配股权']],d:'同仁堂集团旗下中医医疗服务战略平台；面向个人及机构提供中医医疗及标准化管理服务'}
+],
+26:[
+  {t:'open',n:'铜师傅',c:'0664.HK',tg:['纯H股','手工艺电商'],k:[['招股开始','2026-03-26'],['预计上市','2026-04-01'],['中签公告','2026-03-30'],['办公地','浙江省杭州市'],['保荐人','中国光大证券（香港）']],d:'主打铜工艺品的垂直电商品牌，属圣匠文化创意有限公司'},
+  {t:'open',n:'傅里叶半导体',c:'3625.HK',tg:['纯H股','音频芯片'],k:[['招股开始','2026-03-26'],['预计上市','2026-04-01'],['中签公告','2026-03-30'],['办公地','上海市'],['保荐人','东方证券（香港）'],['2024年收入','3.55亿（+136%）']],d:'功放音频芯片及触觉反馈芯片国内领先；2024年中国功放音频芯片出货量排名第一'}
+],
+30:[
+  {t:'listed',n:'华沿机器人',c:'1021.HK',tg:['纯H股','协作机器人'],k:[['预计挂牌','2026-03-30'],['发行价','17.00港元'],['募资','约13.73亿港元'],['办公地','广东省深圳市']],d:'预计3月30日挂牌，今日（3/25）为申购截止日'},
+  {t:'listed',n:'瀚天天成',c:'2726.HK',tg:['纯H股','SiC外延'],k:[['预计挂牌','2026-03-30'],['发行价','76.26港元'],['募资','约16.39亿港元'],['办公地','福建省厦门市']],d:'预计3月30日挂牌，全球SiC外延第一'},
+  {t:'listed',n:'德适生物-B',c:'2526.HK',tg:['18A'],k:[['预计挂牌','2026-03-30'],['发行价区间','95.60–112.50港元'],['办公地','浙江省杭州市']],d:'18A医疗科技，预计3月30日挂牌'},
+  {t:'listed',n:'极视角',c:'6636.HK',tg:['18C'],k:[['预计挂牌','2026-03-30'],['发行价','40.00港元'],['办公地','山东省青岛市']],d:'AI计算机视觉，预计3月30日挂牌'},
+  {t:'listed',n:'同仁堂医养',c:'2667.HK',tg:['纯H股'],k:[['预计挂牌','2026-03-30'],['发行价区间','7.30–8.30港元'],['办公地','北京市']],d:'同仁堂集团旗下，预计3月30日挂牌'}
+]
+};
+
+const TC={listed:'cl',close:'cc',open:'co',hear:'ch',filed:'cf',lapsed:'cx',intent:'ci'};
+const TB={listed:'eb-l',close:'eb-c',open:'eb-o',hear:'eb-h',filed:'eb-f',lapsed:'eb-x',intent:'eb-i'};
+const TL={listed:'挂牌上市',close:'申购截止',open:'招股开始',hear:'聆讯通过',filed:'递表中',lapsed:'招股书失效',intent:'意向公告'};
+const DW=['日','一','二','三','四','五','六'];
+
+function build(){
+  const cal=document.getElementById('cal');
+  for(let i=0;i<0;i++){const e=document.createElement('div');e.className='day empty';cal.appendChild(e);}
+  for(let d=1;d<=31;d++){
+    const dow=(d-1)%7;const isWk=dow===0||dow===6;
+    const isPast=d<25;const isToday=d===25;
+    const evs=E[d]||[];
+    const el=document.createElement('div');
+    el.className=['day',isWk?'wkend':'',isPast?'past':'',isToday?'today':'',!evs.length?'no-ev':''].filter(Boolean).join(' ');
+    const dn=document.createElement('div');dn.className='dn';
+    dn.innerHTML=d+(isToday?'<span class="dn-t">今日</span>':'');
+    el.appendChild(dn);
+    evs.slice(0,3).forEach(ev=>{
+      const c=document.createElement('span');c.className='chip '+TC[ev.t];c.textContent=ev.n;el.appendChild(c);
+    });
+    if(evs.length>3){const m=document.createElement('div');m.className='more';m.textContent=`+${evs.length-3}`;el.appendChild(m);}
+    if(evs.length)el.addEventListener('click',()=>open_(d,evs));
+    cal.appendChild(el);
+  }
+  const tot=31,rem=(7-tot%7)%7;
+  for(let i=0;i<rem;i++){const e=document.createElement('div');e.className='day empty';cal.appendChild(e);}
+}
+
+function open_(d,evs){
+  document.getElementById('sd').textContent=`2026年3月${d}日（周${DW[(d-1)%7]}）· ${evs.length}个事件`;
+  const b=document.getElementById('sb');b.innerHTML='';
+  evs.forEach(ev=>{
+    const ec=document.createElement('div');ec.className='ec';
+    const kg=ev.k.map(([l,v])=>`<div class="ki"><div class="kl">${l}</div><div class="kv">${v}</div></div>`).join('');
+    const tg=ev.tg.map(t=>`<span class="et et-gray">${t}</span>`).join('');
+    const cd=ev.c&&ev.c!=='——'?`<span class="et et-b">${ev.c}</span>`:'';
+    ec.innerHTML=`<div class="eh"><div><div class="en">${ev.n}</div><div class="et-wrap">${cd}${tg}</div></div><span class="eb ${TB[ev.t]}">${TL[ev.t]}</span></div><div class="kg">${kg}</div>${ev.d?`<div class="ed">${ev.d}</div>`:''}`;
+    b.appendChild(ec);
+  });
+  document.getElementById('modal').classList.remove('hidden');
+  document.querySelector('.sheet').scrollTop=0;
+}
+function cm(){document.getElementById('modal').classList.add('hidden')}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')cm()});
+build();
+</script>
+</body>
+</html>
