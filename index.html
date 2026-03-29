@@ -43,7 +43,8 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 .lgitem{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#000}
 .lgdot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 /* 日历 - 关键：overflow hidden防止溢出 */
-.calwrap{padding:8px 4px 0;overflow:hidden}
+.calwrap{padding:8px 0 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.calinner{min-width:700px;padding:0 4px}
 .dnames{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px}
 .dname{text-align:center;font-size:10px;font-weight:800;color:#5070A0;padding:3px 0}
 .dname.wk{color:#C01020}
@@ -58,9 +59,9 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 .dnum{font-size:10px;font-weight:800;color:#000;margin-bottom:3px;display:flex;align-items:center;gap:2px;line-height:1}
 .dnum.tod{color:#0A46B8}
 .todtag{font-size:7px;font-weight:800;background:#0A46B8;color:#fff;padding:1px 3px;border-radius:2px}
-.chip{border-radius:3px;padding:2px 3px;margin-bottom:1px;font-size:8px;font-weight:800;display:flex;align-items:center;gap:2px;border-left:2px solid;overflow:hidden}
-.cname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;color:#000;font-size:8px}
-.ctag{font-size:6.5px;font-weight:800;flex-shrink:0;color:#000;opacity:.7;white-space:nowrap}
+.chip{border-radius:3px;padding:2px 4px;margin-bottom:1px;font-size:9px;font-weight:800;display:flex;align-items:center;gap:3px;border-left:2px solid;overflow:hidden}
+.cname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;color:#000;font-size:9px}
+.ctag{font-size:7px;font-weight:800;flex-shrink:0;color:#000;opacity:.7;white-space:nowrap}
 .c0{background:#D8EAFF;border-color:#3A80D0}
 .c1{background:#E8D8FF;border-color:#7040C8}
 .c2{background:#FFF0B8;border-color:#C88000}
@@ -125,12 +126,14 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
   <div class="lgitem"><div class="lgdot" style="background:#D01020"></div>上市</div>
 </div>
 <div class="calwrap">
+  <div class="calinner">
   <div class="dnames">
     <div class="dname wk">日</div><div class="dname">一</div><div class="dname">二</div>
     <div class="dname">三</div><div class="dname">四</div><div class="dname">五</div>
     <div class="dname wk">六</div>
   </div>
   <div class="calgrid" id="calgrid"></div>
+  </div>
 </div>
 <div class="footer">数据来源：Wind等权威渠道 · 更新：2026-03-29<br>雪球商业化内部版 · 仅供内部参考，不构成投资建议</div>
 
