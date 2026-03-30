@@ -44,9 +44,9 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 .lgdot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 /* 日历 - 关键：overflow hidden防止溢出 */
 .calwrap{padding:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.calinner{min-width:700px;padding:0 4px}
-.dnames-wrap{position:sticky;top:48px;z-index:40;background:#EEF3FA;padding:4px 4px 2px;border-bottom:1px solid #C0D4EC}
-.dnames{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;min-width:700px}
+.calinner{min-width:560px;padding:0 4px}
+.dnames-wrap{position:sticky;top:48px;z-index:40;background:#EEF3FA;padding:4px 0 2px;border-bottom:1px solid #C0D4EC;overflow-x:hidden}
+.dnames{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;min-width:560px;padding:0 4px}
 .dname{text-align:center;font-size:10px;font-weight:800;color:#5070A0;padding:3px 0}
 .dname.wk{color:#C01020}
 .calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
@@ -429,6 +429,18 @@ document.querySelectorAll('.mtab').forEach(btn=>{
 
 buildCal(3);
 buildSummary();
+
+// 同步dnames横向滚动
+(function(){
+  var cw = document.querySelector('.calwrap');
+  var dw = document.querySelector('.dnames');
+  if(cw && dw){
+    cw.addEventListener('scroll', function(){
+      dw.style.transform = 'translateX(-' + cw.scrollLeft + 'px)';
+    });
+  }
+})();
+
 
 (function(){
   var SC=COLORS, SL2=['递表','通过聆讯','招股','上市'];
