@@ -45,8 +45,8 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 /* 日历 - 关键：overflow hidden防止溢出 */
 .calwrap{padding:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .calinner{min-width:560px;padding:0 4px}
-.dnames-wrap{position:sticky;top:48px;z-index:40;background:#EEF3FA;padding:4px 0 2px;border-bottom:1px solid #C0D4EC;overflow-x:hidden}
-.dnames{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;min-width:560px;padding:0 4px}
+.dnames-wrap{background:#EEF3FA;padding:4px 0 2px;border-bottom:1px solid #C0D4EC;overflow:hidden;position:sticky;top:48px;z-index:40}
+.dnames{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;width:100%;padding:0 4px;box-sizing:border-box}
 .dname{text-align:center;font-size:10px;font-weight:800;color:#5070A0;padding:3px 0}
 .dname.wk{color:#C01020}
 .calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
@@ -427,19 +427,36 @@ document.querySelectorAll('.mtab').forEach(btn=>{
   });
 });
 
+
+(function(){
+  var lxNames=new Set(LX.map(function(c){return c.name;}));
+  Object.keys(FILED).forEach(function(k){
+    FILED[k]=FILED[k].filter(function(f){
+      return !lxNames.has(f.full);
+    });
+  });
+})();
+
 buildCal(3);
 buildSummary();
 
-// 同步dnames横向滚动
 (function(){
-  var cw = document.querySelector('.calwrap');
-  var dw = document.querySelector('.dnames');
-  if(cw && dw){
-    cw.addEventListener('scroll', function(){
-      dw.style.transform = 'translateX(-' + cw.scrollLeft + 'px)';
-    });
+  var cw=document.querySelector('.calwrap');
+  var dn=document.querySelector('.dnames');
+  if(!cw||!dn)return;
+  // 让dnames宽度=calinner宽度
+  function syncWidth(){
+    var ci=document.querySelector('.calinner');
+    if(ci) dn.style.minWidth=ci.offsetWidth+'px';
   }
+  syncWidth();
+  cw.addEventListener('scroll',function(){
+    dn.style.transform='translateX(-'+cw.scrollLeft+'px)';
+  });
+  window.addEventListener('resize',syncWidth);
 })();
+
+
 
 
 (function(){
